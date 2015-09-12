@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare (strict_types = 1);
 
 namespace Mattbit\MysqlCompat;
 
@@ -31,11 +33,11 @@ class Result
     public function column($column, $row)
     {
         $row = $this->statement->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_FIRST, $row);
-        
+
         return $row[$column];
     }
 
-    public function fetch(int $style = Result::FETCH_BOTH)
+    public function fetch(int $style = self::FETCH_BOTH)
     {
         return $this->statement->fetch($this->convertFetchStyle($style));
     }
@@ -69,7 +71,7 @@ class Result
 
             case static::FETCH_NUM:
                 return PDO::FETCH_NUM;
-            
+
             case static::FETCH_BOTH:
                 return PDO::FETCH_BOTH;
 
@@ -78,3 +80,4 @@ class Result
         }
     }
 }
+
