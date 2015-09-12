@@ -1,0 +1,22 @@
+{
+    "name": "mattbit/mysql-compat",
+    "type": "library",
+    "description": "Deprecated mysql_* functions replacement for PHP 7",
+    "keywords": ["mysql","php7"],
+    "homepage": "https://github.com/mattbit/mysql-compat",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mattbit",
+            "email": "me@mattbit.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": { "Mattbit\\MysqlCompat\\": "src" },
+        "files": ["src/functions.php"]
+    }
+}
