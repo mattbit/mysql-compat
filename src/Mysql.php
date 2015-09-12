@@ -8,10 +8,10 @@ class Mysql
 
     public static function __callStatic($method, $args)
     {
-        if (static::$handler === null) {
-            static::$handler = new Handler();
+        if (self::$handler === null) {
+            self::$handler = new Handler();
         }
 
-        return call_user_func_array([static::$handler, $method], $args);
+        return call_user_func_array([self::$handler, $method], $args);
     }
 }
