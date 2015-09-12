@@ -2,6 +2,8 @@
 
 namespace Mattbit\MysqlCompat;
 
+use Mattbit\MysqlCompat\Exception\ConnectionException;
+
 class Handler
 {
     protected $connections = [];
