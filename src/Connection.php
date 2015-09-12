@@ -33,8 +33,7 @@ class Connection
 
     public function useDatabase($database)
     {
-        // @todo: use a prepared statement
-        $this->pdo->query("use {$database}");
+        return $this->pdo->query("use {$database}");
     }
 
     public function getServerInfo(): string
