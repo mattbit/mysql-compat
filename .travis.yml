@@ -1,0 +1,8 @@
+language: php
+php:
+    - 7.0
+
+install:
+    - composer install
+
+script: bin/phpspec run --format=pretty
