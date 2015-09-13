@@ -1,5 +1,8 @@
 # Old mysql functions compatibility for PHP7
 
+[![Build Status](https://travis-ci.org/mattbit/mysql-compat.svg?branch=master)](https://travis-ci.org/mattbit/mysql-compat)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattbit/mysql-compat/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattbit/mysql-compat/?branch=master)
+
 This library tries to provide backward compatibility with the deprecated `mysql_*` functions.
 
 ## Caveat
