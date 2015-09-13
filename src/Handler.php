@@ -3,9 +3,7 @@
 namespace Mattbit\MysqlCompat;
 
 use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
-use Mattbit\MysqlCompat\Exception\ConnectionException;
 use Mattbit\MysqlCompat\Exception\NoConnectionException;
-use PDO;
 
 class Handler
 {
