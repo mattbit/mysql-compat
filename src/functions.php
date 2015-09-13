@@ -9,11 +9,11 @@ namespace {
     if (!function_exists('mysql_connect')) {
         function mysql_connect(string $server = null, string $username = null , string $password = null, bool $new_link = false, int $client_flags = 0): Connection
         {
-            $server   or $server = ini_get("mysql.default_host");
-            $username or $username = ini_get("mysql.default_user");
-            $password or $password = ini_get("mysql.default_password");
+            $server   || $server = ini_get("mysql.default_host");
+            $username || $username = ini_get("mysql.default_user");
+            $password || $password = ini_get("mysql.default_password");
 
-            return Mysql::connect($server, $username, $password);
+            return Mysql::connect("mysql:host={$server};", $username, $password);
         }
     }
 
@@ -108,7 +108,7 @@ namespace {
     if (!function_exists('mysql_real_escape_string')) {
         function mysql_real_escape_string($unescaped_string, Connection $connection = null)
         {
-            return Mysql::quote($unescaped_string, $connection);
+            return Mysql::escape($unescaped_string, $connection);
         }
     }
 }

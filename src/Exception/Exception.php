@@ -2,6 +2,7 @@
 
 namespace Mattbit\MysqlCompat\Exception;
 
-class QueryException extends Exception
+class Exception extends \Exception
 {
+
 }

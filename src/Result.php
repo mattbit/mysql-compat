@@ -20,6 +20,11 @@ class Result
         $this->statement = $statement;
     }
 
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
     public function toArray()
     {
         return $this->statement->fetchAll();

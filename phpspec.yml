@@ -1,0 +1,4 @@
+suites:
+    mysql_compat_suite:
+        namespace: Mattbit\MysqlCompat
+        psr4_prefix: Mattbit\MysqlCompat

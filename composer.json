@@ -18,5 +18,8 @@
     "autoload": {
         "psr-4": { "Mattbit\\MysqlCompat\\": "src" },
         "files": ["src/functions.php"]
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^2.3"
     }
 }

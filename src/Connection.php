@@ -7,11 +7,24 @@ use PDO;
 
 class Connection
 {
+    /**
+     * The status of the connection.
+     *
+     * @var bool
+     */
+    protected $open = false;
+
+    /**
+     * The PDO instance which represent the actual connection.
+     *
+     * @var PDO
+     */
     protected $pdo;
 
-    public function __construct(string $dsn, string $username = null, string $password = null)
+    public function __construct(PDO $pdo)
     {
-        $this->pdo = new PDO($dsn, $username, $password);
+        $this->pdo = $pdo;
+        $this->open = true;
     }
 
     public function query(string $query): Result
@@ -19,16 +32,22 @@ class Connection
         $statement = $this->pdo->query($query);
 
         if ($statement === false) {
-            throw new QueryException("Error executing the query: {$query}");
+            throw new QueryException("Error executing the query.");
         }
 
         return new Result($statement);
     }
 
-    public function quote(string $string): string
+    public function escape($string): string
     {
+        $escaped = $this->pdo->quote($string);
+
         // Hack!
-        return trim(rtrim($this->pdo->quote($string), "'"), "'");
+        if ($escaped[0] === "'" && $escaped[strlen($escaped)-1] === "'") {
+            return substr($escaped, 1, -1);
+        }
+
+        return $escaped;
     }
 
     public function useDatabase($database)
@@ -44,5 +63,16 @@ class Connection
     public function close()
     {
         $this->pdo = null;
+        $this->open = false;
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->open;
+    }
+
+    public function getPdo()
+    {
+        return $this->pdo;
     }
 }

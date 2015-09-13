@@ -11,7 +11,7 @@ class Mysql
     public static function __callStatic($method, $args)
     {
         if (self::$handler === null) {
-            self::$handler = new Handler();
+            self::$handler = new Handler(new ConnectionFactory());
         }
 
         return call_user_func_array([self::$handler, $method], $args);

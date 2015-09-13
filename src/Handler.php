@@ -1,27 +1,42 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Mattbit\MysqlCompat;
 
+use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
 use Mattbit\MysqlCompat\Exception\ConnectionException;
+use Mattbit\MysqlCompat\Exception\NoConnectionException;
+use PDO;
 
 class Handler
 {
+    /**
+     * The array of open connections.
+     *
+     * @var array
+     */
     protected $connections = [];
 
-    protected $lastError;
+    protected $connectionFactory;
 
-    public function connect(string $server, string $username = null, string $password = null): Connection
+    public function __construct(ConnectionFactory $connectionFactory)
     {
-        $connectionId = "{$username}@{$server}";
+        $this->connectionFactory = $connectionFactory;
+    }
+
+    public function connect(string $dsn, string $username = null, string $password = null): Connection
+    {
+        $connectionId = "{$username}@{$dsn}";
 
         // If the same connection is present, do not open a new one
         if ($connection = $this->getConnection($connectionId)) {
+            $this->setLastConnection($connectionId);
+
             return $connection;
         }
 
         // Otherwise create a new connection
-        $connection = new Connection("mysql:host={$server};", $username, $password);
-        $this->connections[$connectionId] = $connection;
+        $connection = $this->connectionFactory->createConnection($dsn, $username, $password);
+        $this->addConnection($connectionId, $connection);
 
         return $connection;
     }
@@ -48,9 +63,7 @@ class Handler
 
     public function useDatabase(string $databaseName, Connection $connection = null): bool
     {
-        if ($connection === null) {
-            $connection = $this->getLastConnection();
-        }
+        $connection = $this->getOpenConnectionOrFail($connection);
 
         $connection->useDatabase($databaseName);
         
@@ -59,20 +72,16 @@ class Handler
 
     public function query(string $query, Connection $connection = null): Result
     {
-        if ($connection === null) {
-            $connection = $this->getLastConnection();
-        }
+        $connection = $this->getOpenConnectionOrFail($connection);
 
         return $connection->query($query);
     }
 
-    public function quote(string $string, Connection $connection = null): string
+    public function escape($string, Connection $connection = null): string
     {
-        if ($connection === null) {
-            $connection = $this->getLastConnection();
-        }
+        $connection = $this->getOpenConnectionOrFail($connection);
 
-        return $connection->quote($string);
+        return $connection->escape($string);
     }
 
     public function getLastConnection(): Connection
@@ -80,9 +89,46 @@ class Handler
         $connection = end($this->connections);
 
         if (!$connection) {
-            throw new ConnectionException("There is no open connection!");
+            throw new NoConnectionException("There is no open connection.");
         }
 
         return $connection;
+    }
+
+    public function getOpenConnectionOrFail(Connection $connection = null): Connection
+    {
+        if ($connection && $this->checkConnection($connection)) {
+            return $connection;
+        }
+
+        return $this->getLastConnection();
+    }
+
+    public function checkConnection(Connection $connection)
+    {
+        if ($connection->isOpen()) {
+            return true;
+        }
+
+        throw new ClosedConnectionException("Cannot use a closed connection.");
+    }
+
+    public function getConnections()
+    {
+        return $this->connections;
+    }
+
+    public function setLastConnection(string $id)
+    {
+        uksort($this->connections, function ($a, $b) use ($id) {
+            if ($a === $id) return 1;
+            if ($b === $id) return -1;
+            return 0;
+        });
+    }
+
+    public function addConnection($id, Connection $connection)
+    {
+        $this->connections[$id] = $connection;
     }
 }
