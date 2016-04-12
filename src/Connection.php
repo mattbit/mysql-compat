@@ -2,8 +2,8 @@
 
 namespace Mattbit\MysqlCompat;
 
-use Mattbit\MysqlCompat\Exception\QueryException;
 use PDO;
+use Mattbit\MysqlCompat\Exception\QueryException;
 
 class Connection
 {
@@ -15,19 +15,24 @@ class Connection
     protected $open = false;
 
     /**
-     * The PDO instance which represent the actual connection.
+     * The PDO instance which represents the actual connection.
      *
      * @var PDO
      */
     protected $pdo;
 
+    /**
+     * Create a new Connection instance.
+     *
+     * @param PDO $pdo
+     */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
         $this->open = true;
     }
 
-    public function query(string $query): Result
+    public function query($query)
     {
         $statement = $this->pdo->query($query);
 
@@ -38,7 +43,7 @@ class Connection
         return new Result($statement);
     }
 
-    public function escape($string): string
+    public function escape($string)
     {
         $escaped = $this->pdo->quote($string);
 
@@ -55,7 +60,7 @@ class Connection
         return $this->pdo->query("use {$database}");
     }
 
-    public function getServerInfo(): string
+    public function getServerInfo()
     {
         return $this->pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
@@ -66,7 +71,7 @@ class Connection
         $this->open = false;
     }
 
-    public function isOpen(): bool
+    public function isOpen()
     {
         return $this->open;
     }

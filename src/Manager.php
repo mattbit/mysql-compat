@@ -2,10 +2,10 @@
 
 namespace Mattbit\MysqlCompat;
 
-use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
 use Mattbit\MysqlCompat\Exception\NoConnectionException;
+use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
 
-class Handler
+class Manager
 {
     /**
      * The array of open connections.
@@ -14,14 +14,30 @@ class Handler
      */
     protected $connections = [];
 
+    /**
+     * @var ConnectionFactory
+     */
     protected $connectionFactory;
 
+    /**
+     * Create a Manager instance.
+     *
+     * @param ConnectionFactory $connectionFactory
+     */
     public function __construct(ConnectionFactory $connectionFactory)
     {
         $this->connectionFactory = $connectionFactory;
     }
 
-    public function connect(string $dsn, string $username = null, string $password = null): Connection
+    /**
+     * Return a connection to the database, creating a new one if needed.
+     *
+     * @param  string $dsn
+     * @param  string $username
+     * @param  string $password
+     * @return Connection
+     */
+    public function connect($dsn, $username = '', $password = '')
     {
         $connectionId = "{$username}@{$dsn}";
 
@@ -39,7 +55,14 @@ class Handler
         return $connection;
     }
 
-    public function disconnect(Connection $connection = null): bool
+    /**
+     * Close the connection. If no connection is passed, it closes the last.
+     *
+     * @param  Connection|null $connection
+     * @return bool
+     * @throws NoConnectionException
+     */
+    public function disconnect(Connection $connection = null)
     {
         if ($connection === null) {
             $connection = $this->getLastConnection();
@@ -52,37 +75,69 @@ class Handler
         return true;
     }
 
-    public function getConnection(string $id)
+    /**
+     * Get a connection.
+     *
+     * @param  string $id
+     * @return Connection
+     */
+    public function getConnection($id)
     {
         if (array_key_exists($id, $this->connections)) {
             return $this->connections[$id];
         }
     }
 
-    public function useDatabase(string $databaseName, Connection $connection = null): bool
+    /**
+     * Select the database to use. If the connection is omitted, the last one is used.
+     *
+     * @param $databaseName
+     * @param Connection|null $connection
+     * @return bool
+     */
+    public function useDatabase($databaseName, Connection $connection = null)
     {
         $connection = $this->getOpenConnectionOrFail($connection);
-
         $connection->useDatabase($databaseName);
-        
+
         return true;
     }
 
-    public function query(string $query, Connection $connection = null): Result
+    /**
+     * Execute a query. If the connection is omitted, the last one is used.
+     *
+     * @param $query
+     * @param Connection|null $connection
+     * @return mixed
+     */
+    public function query($query, Connection $connection = null)
     {
         $connection = $this->getOpenConnectionOrFail($connection);
 
         return $connection->query($query);
     }
 
-    public function escape($string, Connection $connection = null): string
+    /**
+     * Escape a string.
+     *
+     * @param string $string
+     * @param Connection|null $connection
+     * @return string
+     */
+    public function escape($string, Connection $connection = null)
     {
         $connection = $this->getOpenConnectionOrFail($connection);
 
         return $connection->escape($string);
     }
 
-    public function getLastConnection(): Connection
+    /**
+     * Return the last used connection.
+     *
+     * @return Connection
+     * @throws NoConnectionException
+     */
+    public function getLastConnection()
     {
         $connection = end($this->connections);
 
@@ -93,7 +148,7 @@ class Handler
         return $connection;
     }
 
-    public function getOpenConnectionOrFail(Connection $connection = null): Connection
+    public function getOpenConnectionOrFail(Connection $connection = null)
     {
         if ($connection && $this->checkConnection($connection)) {
             return $connection;
@@ -116,7 +171,7 @@ class Handler
         return $this->connections;
     }
 
-    public function setLastConnection(string $id)
+    public function setLastConnection($id)
     {
         uksort($this->connections, function ($a, $b) use ($id) {
             if ($a === $id) return 1;

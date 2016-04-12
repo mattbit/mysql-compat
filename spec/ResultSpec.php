@@ -2,8 +2,8 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
-use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use PhpSpec\ObjectBehavior;
 
 class ResultSpec extends ObjectBehavior
 {

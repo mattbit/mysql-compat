@@ -2,14 +2,14 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
+use Prophecy\Argument;
+use PhpSpec\ObjectBehavior;
 use Mattbit\MysqlCompat\Connection;
 use Mattbit\MysqlCompat\ConnectionFactory;
-use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
 use Mattbit\MysqlCompat\Exception\NoConnectionException;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Mattbit\MysqlCompat\Exception\ClosedConnectionException;
 
-class HandlerSpec extends ObjectBehavior
+class ManagerSpec extends ObjectBehavior
 {
     protected $connectionFactory;
 
@@ -22,7 +22,7 @@ class HandlerSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Mattbit\MysqlCompat\Handler');
+        $this->shouldHaveType('Mattbit\MysqlCompat\Manager');
     }
 
     function it_manages_connections($connection_0, $connection_1)

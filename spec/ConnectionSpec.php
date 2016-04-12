@@ -2,10 +2,10 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
-use Mattbit\MysqlCompat\Exception\QueryException;
-use Mattbit\MysqlCompat\Result;
-use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use PhpSpec\ObjectBehavior;
+use Mattbit\MysqlCompat\Result;
+use Mattbit\MysqlCompat\Exception\QueryException;
 
 class ConnectionSpec extends ObjectBehavior
 {

@@ -1,7 +1,5 @@
 <?php
 
-declare (strict_types = 1);
-
 namespace Mattbit\MysqlCompat;
 
 use PDO;
@@ -42,12 +40,12 @@ class Result
         return $row[$column];
     }
 
-    public function fetch(int $style = self::FETCH_BOTH)
+    public function fetch($style = self::FETCH_BOTH)
     {
         return $this->statement->fetch($this->convertFetchStyle($style));
     }
 
-    public function fetchObject(string $class = null, array $parameters = [])
+    public function fetchObject($class = null, array $parameters = [])
     {
         if ($class === null) {
             return $this->fetch(static::FETCH_OBJ);
@@ -85,4 +83,3 @@ class Result
         }
     }
 }
-
