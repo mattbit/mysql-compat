@@ -1,8 +1,8 @@
 {
     "name": "mattbit/mysql-compat",
     "type": "library",
-    "description": "Deprecated mysql_* functions replacement for PHP 7",
-    "keywords": ["mysql","php7"],
+    "description": "Deprecated mysql_* functions replacement with PDO",
+    "keywords": ["mysql", "mysql functions", "php7"],
     "homepage": "https://github.com/mattbit/mysql-compat",
     "license": "MIT",
     "authors": [
@@ -13,16 +13,15 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=5.4"
     },
     "autoload": {
-        "psr-4": { "Mattbit\\MysqlCompat\\": "src" },
-        "files": ["src/functions.php"]
-    },
-    "require-dev": {
-        "phpspec/phpspec": "^2.3"
+        "psr-4": { "Mattbit\\MysqlCompat\\": "src" }
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^2.5"
     }
 }
