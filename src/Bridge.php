@@ -2,6 +2,7 @@
 
 namespace Mattbit\MysqlCompat;
 
+use PDO;
 use Mattbit\MysqlCompat\Exception\QueryException;
 
 class Bridge
@@ -203,7 +204,7 @@ class Bridge
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
-        return $connection->getAttribute(PDO::ATTR_SERVER_INFO);
+        return $connection->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
 
     public function info()
@@ -215,7 +216,7 @@ class Bridge
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
-        return $connection->getLastInsertId();
+        return (int) $connection->getLastInsertId();
     }
 
     public function listDbs()

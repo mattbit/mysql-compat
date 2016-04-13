@@ -38,6 +38,8 @@ class Connection
     {
         $this->pdo = $pdo;
         $this->open = true;
+        
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function query($query)
@@ -50,7 +52,7 @@ class Connection
 
         $this->lastQuery = $statement;
 
-        return new Result($statement);
+        return new Result($statement, $this);
     }
 
     public function quote($string)
@@ -62,10 +64,8 @@ class Connection
 
     public function useDatabase($database)
     {
-        return $this->parametrizedQuery(
-            "USE :database",
-            [':database' => $database]
-        );
+        // @todo: bind parameter
+        return $this->parametrizedQuery("USE {$database}");
     }
 
     public function getServerInfo()
@@ -124,13 +124,7 @@ class Connection
 
     public function getLastInsertId()
     {
-        $id = $this->pdo->lastInsertId();
-
-        if (is_numeric($id)) {
-            return (int) $id;
-        }
-
-        return $id;
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -143,11 +137,10 @@ class Connection
         $statement = $this->pdo->prepare($query);
 
         $success = $statement->execute($params);
-
         if ($success === false) {
             return false;
         }
 
-        return new Result($statement);
+        return new Result($statement, $this);
     }
 }

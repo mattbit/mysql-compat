@@ -11,13 +11,16 @@ class Result
     const FETCH_BOTH = 3;
     const FETCH_OBJ = PDO::FETCH_OBJ;
 
+    protected $connection;
+
     protected $statement;
 
     protected $cursor;
 
-    public function __construct(\PDOStatement $statement)
+    public function __construct(\PDOStatement $statement, Connection $connection)
     {
         $this->statement = $statement;
+        $this->connection = $connection;
     }
 
     public function getStatement()
@@ -106,5 +109,10 @@ class Result
     public function getColumnCount()
     {
         return $this->statement->columnCount();
+    }
+
+    public function getConnection()
+    {
+        return $this->connection;
     }
 }
