@@ -7,11 +7,6 @@ use PDOStatement;
 
 class Result
 {
-    const FETCH_ASSOC = 1;
-    const FETCH_NUM = 2;
-    const FETCH_BOTH = 3;
-    const FETCH_OBJ = PDO::FETCH_OBJ;
-
     /**
      * @var Connection
      */
@@ -23,12 +18,18 @@ class Result
     protected $statement;
 
     /**
-     * @var int
+     * The last fetched row.
+     *
+     * @var mixed
      */
-    protected $cursor;
-
     protected $lastFetch;
 
+    /**
+     * Create a Result instance.
+     *
+     * @param PDOStatement $statement
+     * @param Connection $connection
+     */
     public function __construct(PDOStatement $statement, Connection $connection)
     {
         $this->statement = $statement;
@@ -57,22 +58,14 @@ class Result
 
     public function column($column, $row)
     {
-        $row = $this->statement->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_ABS, $row);
+        $rows = $this->statement->fetchAll(PDO::FETCH_BOTH);
 
-        return $row[$column];
+        return $rows[$row][$column];
     }
 
-    public function fetch($style = self::FETCH_BOTH, $orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
+    public function fetch($fetchMode = PDO::FETCH_BOTH, $orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
     {
-        $fetchMode = $this->convertFetchStyle($style);
-
-        if ($this->cursor !== null) {
-            $result = $this->statement->fetch($fetchMode, PDO::FETCH_ORI_ABS, $this->cursor);
-            $this->cursor++;
-        } else {
-            $result = $this->statement->fetch($fetchMode, $orientation, $offset);
-        }
-
+        $result = $this->statement->fetch($fetchMode, $orientation, $offset);
         $this->lastFetch = is_object($result) ? clone($result) : $result;
 
         return $result;
@@ -82,8 +75,9 @@ class Result
     {
         $this->statement->setFetchMode(PDO::FETCH_CLASS, $class, $params);
 
-        return $this->fetch(static::FETCH_OBJ);
+        return $this->fetch(PDO::FETCH_CLASS);
     }
+
     public function fetchAll()
     {
         return $this->statement->fetchAll();
@@ -92,26 +86,6 @@ class Result
     public function free()
     {
         return $this->statement->closeCursor();
-    }
-
-    public function convertFetchStyle($style)
-    {
-        switch ($style) {
-            case static::FETCH_ASSOC:
-                return PDO::FETCH_ASSOC;
-
-            case static::FETCH_NUM:
-                return PDO::FETCH_NUM;
-
-            case static::FETCH_BOTH:
-                return PDO::FETCH_BOTH;
-
-            case static::FETCH_OBJ:
-                return PDO::FETCH_CLASS;
-
-            default:
-                return $style;
-        }
     }
 
     public function setCursor($rowNumber)

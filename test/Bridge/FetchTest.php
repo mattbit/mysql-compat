@@ -1,6 +1,7 @@
 <?php
 
 use Mattbit\MysqlCompat\Result;
+use Mattbit\MysqlCompat\MysqlConstants;
 
 class FetchTest extends BridgeTestCase
 {
@@ -24,7 +25,7 @@ class FetchTest extends BridgeTestCase
                 "id"        => "2",
                 "testfield" => "test 2",
             ],
-            $this->bridge->fetchArray($result, Result::FETCH_ASSOC)
+            $this->bridge->fetchArray($result, MysqlConstants::FETCH_ASSOC)
         );
 
         $this->assertEquals(
@@ -32,7 +33,7 @@ class FetchTest extends BridgeTestCase
                 0 => "3",
                 1 => "test 3",
             ],
-            $this->bridge->fetchArray($result, Result::FETCH_NUM)
+            $this->bridge->fetchArray($result, MysqlConstants::FETCH_NUM)
         );
         
         $this->assertFalse($this->bridge->fetchArray($result));
