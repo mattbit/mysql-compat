@@ -13,7 +13,7 @@ class Mysql
     /**
      * The database manager service.
      *
-     * @var Manager
+     * @var Bridge
      */
     private static $bridge;
 

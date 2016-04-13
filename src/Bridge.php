@@ -72,9 +72,9 @@ class Bridge
         throw new NotSupportedException("The mysql_data_seek function is not supported. You must refactor your code.");
     }
 
-    public function dbName(Result $result, $row, $field = null)
+    public function dbName()
     {
-        // @todo: implement this
+        // @todo
     }
 
     public function dbQuery($database, $query, Connection $linkIdentifier = null)
@@ -87,7 +87,7 @@ class Bridge
 
     public function dropDb()
     {
-        // @todo: implement dropDb
+        // @todo
     }
 
     /**
@@ -299,7 +299,7 @@ class Bridge
             return 0;
         }
 
-        $countResult = $result->getConnection()->query($count, Result::FETCH_NUM);
+        $countResult = $result->getConnection()->query($count);
 
         return (int) $countResult->fetch()[0];
     }

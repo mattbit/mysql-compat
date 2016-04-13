@@ -116,21 +116,7 @@ class Manager
 
         return $connection->query($query);
     }
-
-    /**
-     * Escape a string.
-     *
-     * @param string $string
-     * @param Connection|null $connection
-     * @return string
-     */
-    public function escape($string, Connection $connection = null)
-    {
-        $connection = $this->getOpenConnectionOrFail($connection);
-
-        return $connection->escape($string);
-    }
-
+    
     /**
      * Return the last used connection.
      *
