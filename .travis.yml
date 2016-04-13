@@ -1,8 +1,25 @@
 language: php
 php:
+    - 5.4
+    - 5.5
+    - 5.6
     - 7.0
 
 install:
     - composer install
 
-script: bin/phpspec run --format=pretty
+services:
+  - mysql
+
+before_install:
+  - mysql -e "create database IF NOT EXISTS test_database;" -uroot
+
+script:
+  - bin/phpspec run --format=pretty
+  - bin/phpunit --config phpunit.xml
+
+env:
+  - MYSQL_COMPAT_DBHOST="127.0.0.1"
+  - MYSQL_COMPAT_DBUSER="travis"
+  - MYSQL_COMPAT_DBPASS=""
+  - MYSQL_COMPAT_DBNAME="test_database"

@@ -3,6 +3,7 @@
 namespace Mattbit\MysqlCompat;
 
 use PDO;
+use PDOStatement;
 
 class Result
 {
@@ -11,18 +12,34 @@ class Result
     const FETCH_BOTH = 3;
     const FETCH_OBJ = PDO::FETCH_OBJ;
 
+    /**
+     * @var Connection
+     */
     protected $connection;
 
+    /**
+     * @var PDOStatement
+     */
     protected $statement;
 
+    /**
+     * @var int
+     */
     protected $cursor;
 
-    public function __construct(\PDOStatement $statement, Connection $connection)
+    protected $lastFetch;
+
+    public function __construct(PDOStatement $statement, Connection $connection)
     {
         $this->statement = $statement;
         $this->connection = $connection;
     }
 
+    /**
+     * Get the PDO statement.
+     *
+     * @return PDOStatement
+     */
     public function getStatement()
     {
         return $this->statement;
@@ -52,11 +69,13 @@ class Result
         if ($this->cursor !== null) {
             $result = $this->statement->fetch($fetchMode, PDO::FETCH_ORI_ABS, $this->cursor);
             $this->cursor++;
-
-            return $result;
+        } else {
+            $result = $this->statement->fetch($fetchMode, $orientation, $offset);
         }
 
-        return $this->statement->fetch($fetchMode, $orientation, $offset);
+        $this->lastFetch = is_object($result) ? clone($result) : $result;
+
+        return $result;
     }
 
     public function fetchObject($class = 'stdClass', array $params = [])
@@ -65,7 +84,6 @@ class Result
 
         return $this->fetch(static::FETCH_OBJ);
     }
-
     public function fetchAll()
     {
         return $this->statement->fetchAll();
@@ -114,5 +132,10 @@ class Result
     public function getConnection()
     {
         return $this->connection;
+    }
+
+    public function getLastFetch()
+    {
+        return $this->lastFetch;
     }
 }

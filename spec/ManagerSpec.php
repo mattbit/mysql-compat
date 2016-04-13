@@ -110,15 +110,7 @@ class ManagerSpec extends ObjectBehavior
 
         $this->query('my query');
     }
-
-    function it_executes_escape($connection)
-    {
-        $connection = $this->setUpConnection($connection);
-        $connection->escape('unescaped')->shouldBeCalled();
-
-        $this->escape('unescaped');
-    }
-
+    
     function it_selects_database($connection)
     {
         $connection = $this->setUpConnection($connection);

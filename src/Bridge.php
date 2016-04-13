@@ -2,6 +2,7 @@
 
 namespace Mattbit\MysqlCompat;
 
+use Mattbit\MysqlCompat\Exception\NotSupportedException;
 use PDO;
 use Mattbit\MysqlCompat\Exception\QueryException;
 
@@ -55,7 +56,7 @@ class Bridge
 
         return $this->manager->connect("mysql:host={$server};", $username, $password);
     }
-
+    
     public function createDb($databaseName, Connection $linkIdentifier = null)
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
@@ -66,11 +67,9 @@ class Bridge
         );
     }
 
-    public function dataSeek(Result $result, $rowNumber = 0)
+    public function dataSeek()
     {
-        $result->setCursor($rowNumber);
-
-        return true;
+        throw new NotSupportedException("The mysql_data_seek function is not supported. You must refactor your code.");
     }
 
     public function dbName(Result $result, $row, $field = null)
@@ -91,13 +90,25 @@ class Bridge
         // @todo: implement dropDb
     }
 
+    /**
+     * Return the last error number. A value of 0 means no errors.
+     *
+     * @param Connection|null $linkIdentifier
+     * @return int
+     */
     public function errno(Connection $linkIdentifier = null)
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
-        return $connection->getErrorCode();
+        return (int) $connection->getErrorInfo()[1];
     }
 
+    /**
+     * Return the last error text.
+     *
+     * @param Connection|null $linkIdentifier
+     * @return string
+     */
     public function error(Connection $linkIdentifier = null)
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
@@ -111,33 +122,62 @@ class Bridge
         return $this->realEscapeString($unescapedString);
     }
 
+    /**
+     * Fetch the next row from the result as an array.
+     *
+     * @param Result $result
+     * @param int $resultType
+     * @return bool|array
+     */
     public function fetchArray(Result $result, $resultType = Result::FETCH_BOTH)
     {
         return $result->fetch($resultType);
     }
 
+    /**
+     * Fetch the next row as an associative array.
+     *
+     * @param Result $result
+     * @return bool|array
+     */
     public function fetchAssoc(Result $result)
     {
         return $this->fetchArray($result, Result::FETCH_ASSOC);
     }
 
+    /**
+     * Fetch the metadata of a column.
+     * USE WITH CARE! Accuracy of results is not guaranteed.
+     *
+     * @param Result $result
+     * @param int $fieldOffset
+     * @return bool|object
+     * @deprecated
+     */
     public function fetchField(Result $result, $fieldOffset = 0)
     {
-        // @todo: handle non-numeric offset
         $meta = $result->getColumnMeta($fieldOffset);
 
         if ($meta === false) {
             return false;
         }
 
-        // @todo: check that attributes correspond
+        $meta = (object) $meta;
 
-        return (object) $meta;
+        foreach ($meta->flags as $flag) {
+            $meta->{$flag} = 1;
+        }
+
+        return $meta;
     }
 
-    public function fetchLengths()
+    public function fetchLengths(Result $result)
     {
-        // @todo
+        if (!is_array($result->getLastFetch())) {
+            return false;
+        }
+
+        return array_values(array_map('strlen', $result->getLastFetch()));
     }
 
     public function fetchObject(Result $result, $className = 'stdClass', array $params = [])
@@ -212,7 +252,7 @@ class Bridge
         // @todo
     }
 
-    public function insertId(Connection $linkIdentifier)
+    public function insertId(Connection $linkIdentifier = null)
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
@@ -252,7 +292,13 @@ class Bridge
     public function numRows(Result $result)
     {
         $query = $result->getStatement()->queryString;
-        $count = preg_replace("~SELECT (.+) FROM~", "SELECT COUNT(*) FROM", $query);
+        $matches = 0;
+        $count = preg_replace("~SELECT (.+) FROM~", "SELECT COUNT(*) FROM", $query, -1, $matches);
+
+        if ($matches === 0) {
+            return 0;
+        }
+
         $countResult = $result->getConnection()->query($count, Result::FETCH_NUM);
 
         return (int) $countResult->fetch()[0];

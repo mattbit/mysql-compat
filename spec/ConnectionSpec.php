@@ -60,20 +60,18 @@ class ConnectionSpec extends ObjectBehavior
         $this->shouldThrow(QueryException::class)->duringQuery('my wrong query');
     }
 
-    function it_escapes_correctly()
+    function it_quotes_parameters()
     {
-        foreach ($this->getEscapingData() as $arg) {
-            $this->pdo->quote($arg[1])
-                      ->shouldBeCalled()
-                      ->willReturn($arg[2]);
+        $this->pdo->quote('my param')
+                  ->shouldBeCalled()
+                  ->willReturn("'my param'");
 
-            $this->escape($arg[1])->shouldEqual($arg[0]);
-        }
+        $this->quote('my param')->shouldEqual("'my param'");
     }
 
     public function it_selects_database()
     {
-        $this->pdo->query('use mydb')
+        $this->pdo->query('USE mydb')
                   ->shouldBeCalled();
 
         $this->useDatabase('mydb');
@@ -85,14 +83,5 @@ class ConnectionSpec extends ObjectBehavior
                    ->willReturn('my fake server info');
 
         $this->getServerInfo()->shouldEqual('my fake server info');
-    }
-
-    protected function getEscapingData()
-    {
-        return [
-            ['%value%', '%value%', "'%value%'"],
-            ["\\' wrong quote", "' wrong quote", "'\\' wrong quote'"],
-            ["\\'\\'", "''", "'\\'\\''"]
-        ];
     }
 }

@@ -22,6 +22,7 @@
         "bin-dir": "bin"
     },
     "require-dev": {
-        "phpspec/phpspec": "^2.5"
+        "phpspec/phpspec": "^2.5",
+        "phpunit/phpunit": "^5.3"
     }
 }

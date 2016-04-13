@@ -38,8 +38,6 @@ class Connection
     {
         $this->pdo = $pdo;
         $this->open = true;
-        
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function query($query)
@@ -51,6 +49,10 @@ class Connection
         }
 
         $this->lastQuery = $statement;
+
+        if ($statement === null) {
+            return;
+        }
 
         return new Result($statement, $this);
     }
@@ -64,8 +66,7 @@ class Connection
 
     public function useDatabase($database)
     {
-        // @todo: bind parameter
-        return $this->parametrizedQuery("USE {$database}");
+        return $this->query("USE {$database}");
     }
 
     public function getServerInfo()
@@ -106,12 +107,7 @@ class Connection
 
         return $statement->fetch(PDO::FETCH_NUM)[0];
     }
-
-    public function getErrorCode()
-    {
-        return $this->pdo->errorCode();
-    }
-
+    
     public function getErrorInfo()
     {
         return $this->pdo->errorInfo();
