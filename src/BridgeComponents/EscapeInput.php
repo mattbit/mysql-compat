@@ -2,6 +2,8 @@
 
 namespace Mattbit\MysqlCompat\BridgeComponents;
 
+use Mattbit\MysqlCompat\Connection;
+
 trait EscapeInput
 {
     public function escapeString($unescapedString)
@@ -15,10 +17,10 @@ trait EscapeInput
 
         $escaped = $connection->quote($unescapedString);
         // Hack!
-        if ($escaped[0] === "'" && $escaped[strlen($escaped)-1] === "'") {
+        if ($escaped[0] === "'" && $escaped[strlen($escaped) - 1] === "'") {
             return substr($escaped, 1, -1);
         }
 
-        throw new \Exception("Cannot escape string");
+        throw new \Exception('Cannot escape string');
     }
 }

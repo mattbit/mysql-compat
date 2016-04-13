@@ -1,6 +1,5 @@
 <?php
 
-use Mattbit\MysqlCompat\Result;
 use Mattbit\MysqlCompat\MysqlConstants;
 
 class FetchTest extends BridgeTestCase
@@ -12,30 +11,30 @@ class FetchTest extends BridgeTestCase
 
         $this->assertEquals(
             [
-                0           => "1",
-                1           => "test 1",
-                "id"        => "1",
-                "testfield" => "test 1",
+                0 => '1',
+                1 => 'test 1',
+                'id' => '1',
+                'testfield' => 'test 1',
             ],
             $this->bridge->fetchArray($result)
         );
 
         $this->assertEquals(
             [
-                "id"        => "2",
-                "testfield" => "test 2",
+                'id' => '2',
+                'testfield' => 'test 2',
             ],
             $this->bridge->fetchArray($result, MysqlConstants::FETCH_ASSOC)
         );
 
         $this->assertEquals(
             [
-                0 => "3",
-                1 => "test 3",
+                0 => '3',
+                1 => 'test 3',
             ],
             $this->bridge->fetchArray($result, MysqlConstants::FETCH_NUM)
         );
-        
+
         $this->assertFalse($this->bridge->fetchArray($result));
     }
 
@@ -46,8 +45,8 @@ class FetchTest extends BridgeTestCase
 
         $this->assertEquals(
             [
-                'id'        => '4',
-                'testfield' => 'test 4'
+                'id' => '4',
+                'testfield' => 'test 4',
             ],
             $this->bridge->fetchAssoc($result)
         );
@@ -103,7 +102,7 @@ class FetchTest extends BridgeTestCase
         $this->assertEquals(
             [
                 0 => '6',
-                1 => 'test 6'
+                1 => 'test 6',
             ],
             $this->bridge->fetchRow($result)
         );
@@ -118,7 +117,8 @@ class FetchTest extends BridgeTestCase
     }
 }
 
-class DummyObject {
+class DummyObject
+{
     public $one;
     public $two;
     public function __construct($one, $two)

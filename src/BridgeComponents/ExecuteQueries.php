@@ -2,6 +2,7 @@
 
 namespace Mattbit\MysqlCompat\BridgeComponents;
 
+use Mattbit\MysqlCompat\Connection;
 use Mattbit\MysqlCompat\Exception\QueryException;
 
 trait ExecuteQueries
@@ -38,7 +39,7 @@ trait ExecuteQueries
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
         return $connection->parametrizedQuery(
-            "CREATE DATABASE :databaseName",
+            'CREATE DATABASE :databaseName',
             [':databaseName' => $databaseName]
         );
     }
@@ -48,7 +49,7 @@ trait ExecuteQueries
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
 
         return $connection->parametrizedQuery(
-            "SHOW TABLES FROM :database",
+            'SHOW TABLES FROM :database',
             [':database' => $database]
         );
     }

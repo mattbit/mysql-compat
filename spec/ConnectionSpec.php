@@ -2,7 +2,6 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
-use Prophecy\Argument;
 use PhpSpec\ObjectBehavior;
 use Mattbit\MysqlCompat\Result;
 use Mattbit\MysqlCompat\Exception\QueryException;
@@ -11,33 +10,32 @@ class ConnectionSpec extends ObjectBehavior
 {
     protected $pdo;
 
-    function let($pdo)
+    public function let($pdo)
     {
         $pdo->beADoubleOf(\PDO::class);
         $this->pdo = $pdo;
         $this->beConstructedWith($this->pdo);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Mattbit\MysqlCompat\Connection');
     }
 
-
-    function it_is_open_by_default()
+    public function it_is_open_by_default()
     {
         $this->shouldBeOpen();
         $this->getPdo()->shouldReturn($this->pdo);
     }
 
-    function it_closes_correctly()
+    public function it_closes_correctly()
     {
         $this->close();
         $this->isOpen()->shouldReturn(false);
         $this->getPdo()->shouldReturn(null);
     }
 
-    function it_executes_valid_query($statement)
+    public function it_executes_valid_query($statement)
     {
         $statement->beADoubleOf('PDOStatement');
 
@@ -51,7 +49,7 @@ class ConnectionSpec extends ObjectBehavior
         $result->getStatement()->shouldEqual($statement);
     }
 
-    function it_throws_an_exception_if_query_is_not_valid()
+    public function it_throws_an_exception_if_query_is_not_valid()
     {
         $this->pdo->query('my wrong query')
             ->shouldBeCalled()
@@ -60,7 +58,7 @@ class ConnectionSpec extends ObjectBehavior
         $this->shouldThrow(QueryException::class)->duringQuery('my wrong query');
     }
 
-    function it_quotes_parameters()
+    public function it_quotes_parameters()
     {
         $this->pdo->quote('my param')
                   ->shouldBeCalled()

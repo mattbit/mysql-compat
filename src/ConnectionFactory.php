@@ -9,9 +9,10 @@ class ConnectionFactory
     /**
      * Create a new Connection from PDO.
      *
-     * @param  string $dsn
-     * @param  string $username
-     * @param  string $password
+     * @param string $dsn
+     * @param string $username
+     * @param string $password
+     *
      * @return Connection
      */
     public function createConnection($dsn, $username, $password, $options)

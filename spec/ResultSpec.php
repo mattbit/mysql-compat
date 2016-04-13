@@ -3,7 +3,6 @@
 namespace spec\Mattbit\MysqlCompat;
 
 use Mattbit\MysqlCompat\Connection;
-use Prophecy\Argument;
 use PhpSpec\ObjectBehavior;
 
 class ResultSpec extends ObjectBehavior
@@ -12,7 +11,7 @@ class ResultSpec extends ObjectBehavior
 
     protected $connection;
 
-    function let($statement, $connection)
+    public function let($statement, $connection)
     {
         $statement->beADoubleOf(\PDOStatement::class);
         $this->statement = $statement;
@@ -23,7 +22,7 @@ class ResultSpec extends ObjectBehavior
         $this->beConstructedWith($this->statement, $this->connection);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Mattbit\MysqlCompat\Result');
     }

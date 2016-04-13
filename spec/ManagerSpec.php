@@ -2,8 +2,6 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
-use Mattbit\MysqlCompat\Bridge;
-use Prophecy\Argument;
 use PhpSpec\ObjectBehavior;
 use Mattbit\MysqlCompat\Connection;
 use Mattbit\MysqlCompat\ConnectionFactory;
@@ -14,19 +12,19 @@ class ManagerSpec extends ObjectBehavior
 {
     protected $connectionFactory;
 
-    function let($connectionFactory)
+    public function let($connectionFactory)
     {
         $this->connectionFactory = $connectionFactory;
         $this->connectionFactory->beADoubleOf(ConnectionFactory::class);
         $this->beConstructedWith($connectionFactory);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Mattbit\MysqlCompat\Manager');
     }
 
-    function it_manages_connections($connection_0, $connection_1)
+    public function it_manages_connections($connection_0, $connection_1)
     {
         $connection_0->beADoubleOf(Connection::class);
         $connection_1->beADoubleOf(Connection::class);
@@ -65,7 +63,7 @@ class ManagerSpec extends ObjectBehavior
         $this->getConnections()->shouldHaveCount(0);
     }
 
-    function it_returns_the_last_connection($connection_0, $connection_1)
+    public function it_returns_the_last_connection($connection_0, $connection_1)
     {
         $connection_0->beADoubleOf(Connection::class);
         $connection_1->beADoubleOf(Connection::class);
@@ -88,7 +86,7 @@ class ManagerSpec extends ObjectBehavior
         $this->getLastConnection()->shouldReturn($connection_0);
     }
 
-    function it_creates_a_new_connection_if_forced($connection_0, $connection_1)
+    public function it_creates_a_new_connection_if_forced($connection_0, $connection_1)
     {
         $connection_0->beADoubleOf(Connection::class);
         $connection_1->beADoubleOf(Connection::class);
@@ -102,8 +100,8 @@ class ManagerSpec extends ObjectBehavior
 
         $this->getLastConnection()->shouldReturn($connection_1);
     }
-    
-    function it_returns_open_connections($connection)
+
+    public function it_returns_open_connections($connection)
     {
         $connection->beADoubleOf(Connection::class);
         $connection->isOpen()->willReturn(true);
@@ -119,15 +117,15 @@ class ManagerSpec extends ObjectBehavior
              ->duringGetOpenConnectionOrFail();
     }
 
-    function it_executes_query($connection)
+    public function it_executes_query($connection)
     {
         $connection = $this->setUpConnection($connection);
         $connection->query('my query')->shouldBeCalled();
 
         $this->query('my query');
     }
-    
-    function it_selects_database($connection)
+
+    public function it_selects_database($connection)
     {
         $connection = $this->setUpConnection($connection);
         $connection->useDatabase('db')->shouldBeCalled();
@@ -135,7 +133,7 @@ class ManagerSpec extends ObjectBehavior
         $this->useDatabase('db');
     }
 
-    function it_checks_connection_status($openConnection, $closedConnection)
+    public function it_checks_connection_status($openConnection, $closedConnection)
     {
         $openConnection->beADoubleOf(Connection::class);
         $openConnection->isOpen()->willReturn(true);

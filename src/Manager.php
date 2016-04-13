@@ -32,11 +32,12 @@ class Manager
     /**
      * Return a connection to the database, creating a new one if needed.
      *
-     * @param  string $dsn
-     * @param  string $username
-     * @param  string $password
-     * @param  array  $options
-     * @param  bool   $forceNew
+     * @param string $dsn
+     * @param string $username
+     * @param string $password
+     * @param array  $options
+     * @param bool   $forceNew
+     *
      * @return Connection
      */
     public function connect($dsn, $username = '', $password = '', array $options = [], $forceNew = false)
@@ -60,8 +61,10 @@ class Manager
     /**
      * Close the connection. If no connection is passed, it closes the last.
      *
-     * @param  Connection|null $connection
+     * @param Connection|null $connection
+     *
      * @return bool
+     *
      * @throws NoConnectionException
      */
     public function disconnect(Connection $connection = null)
@@ -80,7 +83,8 @@ class Manager
     /**
      * Get a connection.
      *
-     * @param  string $id
+     * @param string $id
+     *
      * @return Connection
      */
     public function getConnection($id)
@@ -95,6 +99,7 @@ class Manager
      *
      * @param $databaseName
      * @param Connection|null $connection
+     *
      * @return bool
      */
     public function useDatabase($databaseName, Connection $connection = null)
@@ -110,6 +115,7 @@ class Manager
      *
      * @param $query
      * @param Connection|null $connection
+     *
      * @return mixed
      */
     public function query($query, Connection $connection = null)
@@ -118,11 +124,12 @@ class Manager
 
         return $connection->query($query);
     }
-    
+
     /**
      * Return the last used connection.
      *
      * @return Connection
+     *
      * @throws NoConnectionException
      */
     public function getLastConnection()
@@ -130,7 +137,7 @@ class Manager
         $connection = end($this->connections);
 
         if (!$connection) {
-            throw new NoConnectionException("There is no open connection.");
+            throw new NoConnectionException('There is no open connection.');
         }
 
         return $connection;
@@ -151,7 +158,7 @@ class Manager
             return true;
         }
 
-        throw new ClosedConnectionException("Cannot use a closed connection.");
+        throw new ClosedConnectionException('Cannot use a closed connection.');
     }
 
     public function getConnections()
@@ -162,8 +169,13 @@ class Manager
     public function setLastConnection($id)
     {
         uksort($this->connections, function ($a, $b) use ($id) {
-            if ($a === $id) return 1;
-            if ($b === $id) return -1;
+            if ($a === $id) {
+                return 1;
+            }
+            if ($b === $id) {
+                return -1;
+            }
+
             return 0;
         });
     }
@@ -175,7 +187,7 @@ class Manager
 
             return;
         }
-        
+
         $this->connections[$id] = $connection;
     }
 }

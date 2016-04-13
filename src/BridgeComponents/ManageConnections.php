@@ -3,6 +3,7 @@
 namespace Mattbit\MysqlCompat\BridgeComponents;
 
 use PDO;
+use Mattbit\MysqlCompat\Connection;
 use Mattbit\MysqlCompat\MysqlConstants;
 use Mattbit\MysqlCompat\Exception\NotSupportedException;
 
@@ -22,9 +23,15 @@ trait ManageConnections
 
     public function connect($server = null, $username = null, $password = null, $newLink = false, $clientFlags = 0)
     {
-        if ($server   === null) $server   = ini_get("mysql.default_host");
-        if ($username === null) $username = ini_get("mysql.default_user");
-        if ($password === null) $password = ini_get("mysql.default_password");
+        if ($server   === null) {
+            $server = ini_get('mysql.default_host');
+        }
+        if ($username === null) {
+            $username = ini_get('mysql.default_user');
+        }
+        if ($password === null) {
+            $password = ini_get('mysql.default_password');
+        }
 
         $options = $this->parseClientFlags($clientFlags);
 
@@ -44,16 +51,15 @@ trait ManageConnections
         }
 
         if ($clientFlags & MysqlConstants::CLIENT_SSL) {
-            throw new NotSupportedException("SSL is not supported. You must create the PDO instance manually.");
+            throw new NotSupportedException('SSL is not supported. You must create the PDO instance manually.');
         }
 
         if ($clientFlags & MysqlConstants::CLIENT_INTERACTIVE) {
-            throw new NotSupportedException("Interactive client is not supported by PDO.");
+            throw new NotSupportedException('Interactive client is not supported by PDO.');
         }
 
         return $options;
     }
-
 
     public function pconnect()
     {

@@ -28,7 +28,7 @@ class Result
      * Create a Result instance.
      *
      * @param PDOStatement $statement
-     * @param Connection $connection
+     * @param Connection   $connection
      */
     public function __construct(PDOStatement $statement, Connection $connection)
     {
@@ -66,7 +66,7 @@ class Result
     public function fetch($fetchMode = PDO::FETCH_BOTH, $orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
     {
         $result = $this->statement->fetch($fetchMode, $orientation, $offset);
-        $this->lastFetch = is_object($result) ? clone($result) : $result;
+        $this->lastFetch = is_object($result) ? clone $result : $result;
 
         return $result;
     }

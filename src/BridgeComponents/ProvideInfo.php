@@ -2,6 +2,9 @@
 
 namespace Mattbit\MysqlCompat\BridgeComponents;
 
+use PDO;
+use Mattbit\MysqlCompat\Connection;
+
 trait ProvideInfo
 {
     public function getClientInfo()

@@ -2,12 +2,15 @@
 
 namespace Mattbit\MysqlCompat\BridgeComponents;
 
+use Mattbit\MysqlCompat\Connection;
+
 trait ManageErrors
 {
     /**
      * Return the last error number. A value of 0 means no errors.
      *
      * @param Connection|null $linkIdentifier
+     *
      * @return int
      */
     public function errno(Connection $linkIdentifier = null)
@@ -21,6 +24,7 @@ trait ManageErrors
      * Return the last error text.
      *
      * @param Connection|null $linkIdentifier
+     *
      * @return string
      */
     public function error(Connection $linkIdentifier = null)

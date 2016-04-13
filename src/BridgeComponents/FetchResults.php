@@ -13,7 +13,8 @@ trait FetchResults
      * Fetch the next row from the result as an array.
      *
      * @param Result $result
-     * @param int $resultType
+     * @param int    $resultType
+     *
      * @return bool|array
      */
     public function fetchArray(Result $result, $resultType = MysqlConstants::FETCH_BOTH)
@@ -27,6 +28,7 @@ trait FetchResults
      * Fetch the next row as an associative array.
      *
      * @param Result $result
+     *
      * @return bool|array
      */
     public function fetchAssoc(Result $result)
@@ -39,8 +41,10 @@ trait FetchResults
      * USE WITH CARE! Accuracy of results is not guaranteed.
      *
      * @param Result $result
-     * @param int $fieldOffset
+     * @param int    $fieldOffset
+     *
      * @return bool|object
+     *
      * @deprecated
      */
     public function fetchField(Result $result, $fieldOffset = 0)
@@ -88,7 +92,7 @@ trait FetchResults
 
     public function dataSeek()
     {
-        throw new NotSupportedException("The mysql_data_seek function is not supported. You must refactor your code.");
+        throw new NotSupportedException('The mysql_data_seek function is not supported. You must refactor your code.');
     }
 
     public function numFields(Result $result)
@@ -100,7 +104,7 @@ trait FetchResults
     {
         $query = $result->getStatement()->queryString;
         $matches = 0;
-        $count = preg_replace("~SELECT (.+) FROM~", "SELECT COUNT(*) FROM", $query, -1, $matches);
+        $count = preg_replace('~SELECT (.+) FROM~', 'SELECT COUNT(*) FROM', $query, -1, $matches);
 
         if ($matches === 0) {
             return 0;

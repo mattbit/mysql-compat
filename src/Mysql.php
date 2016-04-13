@@ -5,8 +5,6 @@ namespace Mattbit\MysqlCompat;
 /**
  * Class Mysql
  * Provides a facade to access the Mysql functions using a Manager singleton.
- *
- * @package Mattbit\MysqlCompat
  */
 class Mysql
 {
@@ -22,6 +20,7 @@ class Mysql
      *
      * @param  $method
      * @param  $args
+     *
      * @return mixed
      */
     public static function __callStatic($method, $args)

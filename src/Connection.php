@@ -45,7 +45,7 @@ class Connection
         $statement = $this->pdo->query($query);
 
         if ($statement === false) {
-            throw new QueryException("Error executing the query.");
+            throw new QueryException('Error executing the query.');
         }
 
         $this->lastQuery = $statement;
@@ -100,14 +100,14 @@ class Connection
 
         return 0;
     }
-    
+
     public function getCharset()
     {
         $statement = $this->pdo->query("SELECT COLLATION('c')");
 
         return $statement->fetch(PDO::FETCH_NUM)[0];
     }
-    
+
     public function getErrorInfo()
     {
         return $this->pdo->errorInfo();
@@ -126,6 +126,7 @@ class Connection
     /**
      * @param $query
      * @param array $params
+     *
      * @return bool|Result
      */
     public function parametrizedQuery($query, array $params = [])

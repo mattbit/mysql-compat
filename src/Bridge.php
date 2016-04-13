@@ -8,7 +8,6 @@ use Mattbit\MysqlCompat\BridgeComponents\FetchResults;
 use Mattbit\MysqlCompat\BridgeComponents\ManageErrors;
 use Mattbit\MysqlCompat\BridgeComponents\ManageFields;
 use Mattbit\MysqlCompat\BridgeComponents\ManageResult;
-use Mattbit\MysqlCompat\BridgeComponents\ManagesFields;
 use Mattbit\MysqlCompat\BridgeComponents\ExecuteQueries;
 use Mattbit\MysqlCompat\BridgeComponents\ManageConnections;
 
@@ -29,7 +28,7 @@ class Bridge
         ManageFields,
         ManageResult,
         ProvideInfo;
-    
+
     /**
      * Create a new bridge.
      *
