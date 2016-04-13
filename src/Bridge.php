@@ -251,7 +251,11 @@ class Bridge
 
     public function numRows(Result $result)
     {
-        return count($result->fetchAll());
+        $query = $result->getStatement()->queryString;
+        $count = preg_replace("~SELECT (.+) FROM~", "SELECT COUNT(*) FROM", $query);
+        $countResult = $result->getConnection()->query($count, Result::FETCH_NUM);
+
+        return (int) $countResult->fetch()[0];
     }
 
     public function pconnect()
