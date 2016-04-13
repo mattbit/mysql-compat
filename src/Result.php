@@ -87,12 +87,7 @@ class Result
     {
         return $this->statement->closeCursor();
     }
-
-    public function setCursor($rowNumber)
-    {
-        $this->cursor = $rowNumber;
-    }
-
+    
     public function getColumnMeta($columnNumber)
     {
         return $this->statement->getColumnMeta($columnNumber);
