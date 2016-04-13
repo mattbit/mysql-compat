@@ -3,6 +3,7 @@
 
 [![Build Status](https://travis-ci.org/mattbit/mysql-compat.svg?branch=master)](https://travis-ci.org/mattbit/mysql-compat)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattbit/mysql-compat/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattbit/mysql-compat/?branch=master)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d9fcd340-4f29-46ac-966a-9df364b87aae/mini.png)](https://insight.sensiolabs.com/projects/d9fcd340-4f29-46ac-966a-9df364b87aae)
 
 This library tries to provide backward compatibility with the deprecated `mysql_*` functions.
 
