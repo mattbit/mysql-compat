@@ -1,5 +1,5 @@
 
-# Old mysql functions compatibility for PHP7
+# Old mysql functions compatibility for PHP5.6 and PHP7
 
 [![Build Status](https://travis-ci.org/mattbit/mysql-compat.svg?branch=master)](https://travis-ci.org/mattbit/mysql-compat)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mattbit/mysql-compat/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mattbit/mysql-compat/?branch=master)
@@ -14,18 +14,16 @@ Although library provides an hackish replacement for `mysql_real_escape_string`,
 
 ## Requirements
 
-`PHP >= 5.4` with the `PDO` driver is required.
+`PHP >= 5.6` with the `PDO` driver is required (`PHP 7` is supported).
 
 ## To do
-
-- Add tests
 
 - [X] `mysql_​affected_​rows`
 - [ ] `mysql_​client_​encoding`
 - [X] `mysql_​close`
 - [X] `mysql_​connect`
 - [ ] `mysql_​create_​db`
-- [ ] `mysql_​data_​seek`
+- [X] ~~mysql_​data_​seek~~ (not supported)
 - [ ] `mysql_​db_​name`
 - [ ] `mysql_​db_​query`
 - [ ] `mysql_​drop_​db`
