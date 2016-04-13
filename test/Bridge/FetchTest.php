@@ -32,7 +32,7 @@ class FetchTest extends BridgeTestCase
                 0 => "3",
                 1 => "test 3",
             ],
-            $this->bridge->fetchArray($result, MYSQL_NUM)
+            $this->bridge->fetchArray($result, Result::FETCH_NUM)
         );
         
         $this->assertFalse($this->bridge->fetchArray($result));
