@@ -1,5 +1,7 @@
 <?php
 
+use Mattbit\MysqlCompat\Result;
+
 class FetchTest extends BridgeTestCase
 {
     public function testFetchArray()
@@ -22,7 +24,7 @@ class FetchTest extends BridgeTestCase
                 "id"        => "2",
                 "testfield" => "test 2",
             ],
-            $this->bridge->fetchArray($result, MYSQL_ASSOC)
+            $this->bridge->fetchArray($result, Result::FETCH_ASSOC)
         );
 
         $this->assertEquals(
