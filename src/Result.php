@@ -13,6 +13,8 @@ class Result
 
     protected $statement;
 
+    protected $cursor;
+
     public function __construct(\PDOStatement $statement)
     {
         $this->statement = $statement;
@@ -35,30 +37,35 @@ class Result
 
     public function column($column, $row)
     {
-        $row = $this->statement->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_FIRST, $row);
+        $row = $this->statement->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_ABS, $row);
 
         return $row[$column];
     }
 
-    public function fetch($style = self::FETCH_BOTH)
+    public function fetch($style = self::FETCH_BOTH, $orientation = PDO::FETCH_ORI_NEXT, $offset = 0)
     {
-        return $this->statement->fetch($this->convertFetchStyle($style));
+        $fetchMode = $this->convertFetchStyle($style);
+
+        if ($this->cursor !== null) {
+            $result = $this->statement->fetch($fetchMode, PDO::FETCH_ORI_ABS, $this->cursor);
+            $this->cursor++;
+
+            return $result;
+        }
+
+        return $this->statement->fetch($fetchMode, $orientation, $offset);
     }
 
-    public function fetchObject($class = null, array $parameters = [])
+    public function fetchObject($class = 'stdClass', array $params = [])
     {
-        if ($class === null) {
-            return $this->fetch(static::FETCH_OBJ);
-        }
+        $this->statement->setFetchMode(PDO::FETCH_CLASS, $class, $params);
 
-        $result = $this->fetch(static::FETCH_ASSOC);
-        $object = new $class($parameters);
+        return $this->fetch(static::FETCH_OBJ);
+    }
 
-        foreach ($result as $key => $value) {
-            $object->{$key} = $value;
-        }
-
-        return $object;
+    public function fetchAll()
+    {
+        return $this->statement->fetchAll();
     }
 
     public function free()
@@ -78,8 +85,26 @@ class Result
             case static::FETCH_BOTH:
                 return PDO::FETCH_BOTH;
 
+            case static::FETCH_OBJ:
+                return PDO::FETCH_CLASS;
+
             default:
                 return $style;
         }
+    }
+
+    public function setCursor($rowNumber)
+    {
+        $this->cursor = $rowNumber;
+    }
+
+    public function getColumnMeta($columnNumber)
+    {
+        return $this->statement->getColumnMeta($columnNumber);
+    }
+
+    public function getColumnCount()
+    {
+        return $this->statement->columnCount();
     }
 }

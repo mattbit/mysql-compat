@@ -3,6 +3,7 @@
 namespace Mattbit\MysqlCompat;
 
 use PDO;
+use PDOStatement;
 use Mattbit\MysqlCompat\Exception\QueryException;
 
 class Connection
@@ -20,6 +21,13 @@ class Connection
      * @var PDO
      */
     protected $pdo;
+
+    /**
+     * The last executed query.
+     *
+     * @var PDOStatement
+     */
+    protected $lastQuery;
 
     /**
      * Create a new Connection instance.
@@ -40,24 +48,24 @@ class Connection
             throw new QueryException("Error executing the query.");
         }
 
+        $this->lastQuery = $statement;
+
         return new Result($statement);
     }
 
-    public function escape($string)
+    public function quote($string)
     {
         $escaped = $this->pdo->quote($string);
-
-        // Hack!
-        if ($escaped[0] === "'" && $escaped[strlen($escaped)-1] === "'") {
-            return substr($escaped, 1, -1);
-        }
 
         return $escaped;
     }
 
     public function useDatabase($database)
     {
-        return $this->pdo->query("use {$database}");
+        return $this->parametrizedQuery(
+            "USE :database",
+            [':database' => $database]
+        );
     }
 
     public function getServerInfo()
@@ -69,6 +77,8 @@ class Connection
     {
         $this->pdo = null;
         $this->open = false;
+
+        return true;
     }
 
     public function isOpen()
@@ -79,5 +89,65 @@ class Connection
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    public function getRowCount()
+    {
+        if ($this->lastQuery) {
+            return $this->lastQuery->rowCount();
+        }
+
+        return 0;
+    }
+    
+    public function getCharset()
+    {
+        $statement = $this->pdo->query("SELECT COLLATION('c')");
+
+        return $statement->fetch(PDO::FETCH_NUM)[0];
+    }
+
+    public function getErrorCode()
+    {
+        return $this->pdo->errorCode();
+    }
+
+    public function getErrorInfo()
+    {
+        return $this->pdo->errorInfo();
+    }
+
+    public function getAttribute($attribute)
+    {
+        return $this->pdo->getAttribute($attribute);
+    }
+
+    public function getLastInsertId()
+    {
+        $id = $this->pdo->lastInsertId();
+
+        if (is_numeric($id)) {
+            return (int) $id;
+        }
+
+        return $id;
+    }
+
+    /**
+     * @param $query
+     * @param array $params
+     * @return bool|Result
+     */
+    public function parametrizedQuery($query, array $params = [])
+    {
+        $statement = $this->pdo->prepare($query);
+
+        $success = $statement->execute($params);
+
+        if ($success === false) {
+            return false;
+        }
+
+        return new Result($statement);
     }
 }
