@@ -46,17 +46,17 @@ class Bridge
         return $connection->close();
     }
 
-    public function connect($server = null, $username = null, $password = null, $newLink = false, $clientFlags = 0)
+    public function connect($server = null, $username = null, $password = null)
     {
         if ($server   === null) $server   = ini_get("mysql.default_host");
         if ($username === null) $username = ini_get("mysql.default_user");
         if ($password === null) $password = ini_get("mysql.default_password");
 
-        // @todo: implement $newLInk and $clientFlags
+        // @todo: implement $newLink and $clientFlags
 
         return $this->manager->connect("mysql:host={$server};", $username, $password);
     }
-    
+
     public function createDb($databaseName, Connection $linkIdentifier = null)
     {
         $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);

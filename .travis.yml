@@ -19,7 +19,8 @@ script:
   - bin/phpunit --config phpunit.xml
 
 env:
-  - MYSQL_COMPAT_DBHOST="127.0.0.1"
-  - MYSQL_COMPAT_DBUSER="travis"
-  - MYSQL_COMPAT_DBPASS=""
-  - MYSQL_COMPAT_DBNAME="test_database"
+  global:
+    - MYSQL_COMPAT_DBHOST="127.0.0.1"
+    - MYSQL_COMPAT_DBUSER="travis"
+    - MYSQL_COMPAT_DBPASS=""
+    - MYSQL_COMPAT_DBNAME="test_database"
