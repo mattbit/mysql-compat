@@ -2,6 +2,7 @@
 
 namespace spec\Mattbit\MysqlCompat;
 
+use Mattbit\MysqlCompat\Bridge;
 use Prophecy\Argument;
 use PhpSpec\ObjectBehavior;
 use Mattbit\MysqlCompat\Connection;
@@ -30,14 +31,14 @@ class ManagerSpec extends ObjectBehavior
         $connection_0->beADoubleOf(Connection::class);
         $connection_1->beADoubleOf(Connection::class);
 
-        $this->connectionFactory->createConnection('dsn_0', 'username_0', 'password_0')
+        $this->connectionFactory->createConnection('dsn_0', 'username_0', 'password_0', [])
                                 ->shouldBeCalledTimes(1)
                                 ->willReturn($connection_0);
 
         $this->connect('dsn_0', 'username_0', 'password_0')
              ->shouldReturn($connection_0);
 
-        $this->connectionFactory->createConnection('dsn_1', 'username_1', 'password_1')
+        $this->connectionFactory->createConnection('dsn_1', 'username_1', 'password_1', [])
                                 ->shouldBeCalledTimes(1)
                                 ->willReturn($connection_1);
 
@@ -69,11 +70,11 @@ class ManagerSpec extends ObjectBehavior
         $connection_0->beADoubleOf(Connection::class);
         $connection_1->beADoubleOf(Connection::class);
 
-        $this->connectionFactory->createConnection('dsn_0', 'username_0', 'password_0')
+        $this->connectionFactory->createConnection('dsn_0', 'username_0', 'password_0', [])
             ->shouldBeCalledTimes(1)
             ->willReturn($connection_0);
 
-        $this->connectionFactory->createConnection('dsn_1', 'username_1', 'password_1')
+        $this->connectionFactory->createConnection('dsn_1', 'username_1', 'password_1', [])
             ->shouldBeCalledTimes(1)
             ->willReturn($connection_1);
 
@@ -87,6 +88,21 @@ class ManagerSpec extends ObjectBehavior
         $this->getLastConnection()->shouldReturn($connection_0);
     }
 
+    function it_creates_a_new_connection_if_forced($connection_0, $connection_1)
+    {
+        $connection_0->beADoubleOf(Connection::class);
+        $connection_1->beADoubleOf(Connection::class);
+
+        $this->connectionFactory->createConnection('dsn_0', 'username_0', 'password_0', [])
+            ->shouldBeCalledTimes(2)
+            ->willReturn($connection_0, $connection_1);
+
+        $this->connect('dsn_0', 'username_0', 'password_0');
+        $this->connect('dsn_0', 'username_0', 'password_0', [], true);
+
+        $this->getLastConnection()->shouldReturn($connection_1);
+    }
+    
     function it_returns_open_connections($connection)
     {
         $connection->beADoubleOf(Connection::class);

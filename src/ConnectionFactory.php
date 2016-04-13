@@ -14,8 +14,8 @@ class ConnectionFactory
      * @param  string $password
      * @return Connection
      */
-    public function createConnection($dsn, $username, $password)
+    public function createConnection($dsn, $username, $password, $options)
     {
-        return new Connection(new PDO($dsn, $username, $password));
+        return new Connection(new PDO($dsn, $username, $password, $options));
     }
 }

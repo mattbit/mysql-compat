@@ -9,6 +9,27 @@ use Mattbit\MysqlCompat\Exception\QueryException;
 class Bridge
 {
     /**
+     * MYSQL_CLIENT_COMPRESS
+     */
+    const CLIENT_COMPRESS = 32;
+
+    /**
+     * MYSQL_CLIENT_SSL
+     */
+    const CLIENT_SSL = 2048;
+
+    /**
+     * MYSQL_CLIENT_INTERACTIVE
+     */
+    const CLIENT_INTERACTIVE = 1024;
+
+
+    /**
+     * MYSQL_CLIENT_IGNORE_SPACE
+     */
+    const CLIENT_IGNORE_SPACE = 256;
+
+    /**
      * The database manager instance.
      *
      * @var Manager
@@ -41,20 +62,41 @@ class Bridge
 
     public function close(Connection $linkIdentifier = null)
     {
-        $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
-
-        return $connection->close();
+        return $this->manager->disconnect($linkIdentifier);
     }
 
-    public function connect($server = null, $username = null, $password = null)
+    public function connect($server = null, $username = null, $password = null, $newLink = false, $clientFlags = 0)
     {
         if ($server   === null) $server   = ini_get("mysql.default_host");
         if ($username === null) $username = ini_get("mysql.default_user");
         if ($password === null) $password = ini_get("mysql.default_password");
 
-        // @todo: implement $newLink and $clientFlags
+        $options = $this->parseClientFlags($clientFlags);
 
-        return $this->manager->connect("mysql:host={$server};", $username, $password);
+        return $this->manager->connect("mysql:host={$server};", $username, $password, $options, $newLink);
+    }
+
+    protected function parseClientFlags($clientFlags)
+    {
+        $options = [];
+
+        if ($clientFlags & static::CLIENT_COMPRESS) {
+            $options[PDO::MYSQL_ATTR_COMPRESS] = 1;
+        }
+
+        if ($clientFlags & static::CLIENT_IGNORE_SPACE) {
+            $options[PDO::MYSQL_ATTR_IGNORE_SPACE] = 1;
+        }
+
+        if ($clientFlags & static::CLIENT_SSL) {
+            throw new NotSupportedException("SSL is not supported. You must create the PDO instance manually.");
+        }
+
+        if ($clientFlags & static::CLIENT_INTERACTIVE) {
+            throw new NotSupportedException("Interactive client is not supported by PDO.");
+        }
+
+        return $options;
     }
 
     public function createDb($databaseName, Connection $linkIdentifier = null)
@@ -118,7 +160,6 @@ class Bridge
 
     public function escapeString($unescapedString)
     {
-        // @todo: this should warn the user
         return $this->realEscapeString($unescapedString);
     }
 

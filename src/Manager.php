@@ -35,21 +35,23 @@ class Manager
      * @param  string $dsn
      * @param  string $username
      * @param  string $password
+     * @param  array  $options
+     * @param  bool   $forceNew
      * @return Connection
      */
-    public function connect($dsn, $username = '', $password = '')
+    public function connect($dsn, $username = '', $password = '', array $options = [], $forceNew = false)
     {
         $connectionId = "{$username}@{$dsn}";
 
         // If the same connection is present, do not open a new one
-        if ($connection = $this->getConnection($connectionId)) {
+        if (!$forceNew && $connection = $this->getConnection($connectionId)) {
             $this->setLastConnection($connectionId);
 
             return $connection;
         }
 
         // Otherwise create a new connection
-        $connection = $this->connectionFactory->createConnection($dsn, $username, $password);
+        $connection = $this->connectionFactory->createConnection($dsn, $username, $password, $options);
         $this->addConnection($connectionId, $connection);
 
         return $connection;
@@ -168,6 +170,12 @@ class Manager
 
     public function addConnection($id, Connection $connection)
     {
+        if (isset($this->connections[$id])) {
+            $this->addConnection('_'.$id, $connection);
+
+            return;
+        }
+        
         $this->connections[$id] = $connection;
     }
 }
