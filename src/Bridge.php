@@ -52,7 +52,7 @@ class Bridge
 
         // @todo: implement $newLInk and $clientFlags
 
-        $this->manager->connect("mysql:host={$server};", $username, $password);
+        return $this->manager->connect("mysql:host={$server};", $username, $password);
     }
 
     public function createDb($databaseName, Connection $linkIdentifier = null)
