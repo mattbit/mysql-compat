@@ -103,14 +103,9 @@ trait FetchResults
     public function numRows(Result $result)
     {
         $query = $result->getStatement()->queryString;
-        $matches = 0;
-        $count = preg_replace('~SELECT (.+) FROM~', 'SELECT COUNT(*) FROM', $query, -1, $matches);
-
-        if ($matches === 0) {
-            return 0;
-        }
-
-        $countResult = $result->getConnection()->query($count);
+        $countResult = $result->getConnection()->query(
+            'SELECT COUNT(*) FROM ('. $query .') AS count_table'
+        );
 
         return (int) $countResult->fetch()[0];
     }

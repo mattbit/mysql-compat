@@ -40,5 +40,12 @@ class RowCountTest extends BridgeTestCase
 
         $result = $this->bridge->query('SELECT id FROM test_table where id < 5');
         $this->assertEquals(4, $this->bridge->numRows($result));
+
+        $result = $this->bridge->query(
+            'SELECT t.*' .
+            'FROM test_table as t where id < 5'
+        );
+
+        $this->assertEquals(4, $this->bridge->numRows($result));
     }
 }
