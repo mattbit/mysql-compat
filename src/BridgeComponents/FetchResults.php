@@ -85,7 +85,7 @@ trait FetchResults
 
     public function result(Result $result, $row, $field = 0)
     {
-        $row = $result->fetch(MysqlConstants::FETCH_BOTH, PDO::FETCH_ORI_ABS, $row);
+        $row = $result->fetch(PDO::FETCH_BOTH, PDO::FETCH_ORI_ABS, $row);
 
         return $row[$field];
     }
