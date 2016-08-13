@@ -1,7 +1,7 @@
 {
     "name": "mattbit/mysql-compat",
     "type": "library",
-    "description": "Deprecated mysql_* functions replacement with PDO",
+    "description": "Backward compatibility for old mysql_* functions with PDO",
     "keywords": ["mysql", "mysql functions", "php7"],
     "homepage": "https://github.com/mattbit/mysql-compat",
     "license": "MIT",
