@@ -17,6 +17,35 @@ Although library provides an hackish replacement for `mysql_real_escape_string`,
 
 `PHP >= 5.6` with the `PDO` driver is required (`PHP 7` is supported).
 
+## Installation
+
+You can install `mysql-compat` via [composer](https://getcomposer.org/):
+
+```
+composer require mattbit/mysql-compat
+```
+
+## Usage
+
+The `mysql_`-equivalent functions are available through the facade class `Mattbit\MysqlCompat\Mysql`.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+use Mattbit\MysqlCompat\Mysql;
+
+Mysql::connect('host', 'user', 'password');
+
+$result = Mysql::query('SELECT * FROM my_table');
+
+$rows = Mysql::fetchArray($result);
+```
+
+Note that the static methods are named in a camel-case like version of the original functions, e.g. `mysql_fetch_array` becomes `Mysql::fetchArray`.
+
+If you want to re-define the global functions without touching existing code, just include the file `functions.php`.
+
+
 ## To do
 
 - [X] `mysql_​affected_​rows`
