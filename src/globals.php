@@ -5,6 +5,42 @@ use Mattbit\MysqlCompat\Result;
 use Mattbit\MysqlCompat\Connection;
 use Mattbit\MysqlCompat\MysqlConstants;
 
+///////////////////////////////////////
+// Define the global constants       //
+///////////////////////////////////////
+
+if (!defined('MYSQL_CLIENT_COMPRESS')) {
+    define('MYSQL_CLIENT_COMPRESS', MysqlConstants::CLIENT_COMPRESS);
+}
+
+if (!defined('MYSQL_CLIENT_SSL')) {
+    define('MYSQL_CLIENT_SSL', MysqlConstants::CLIENT_SSL);
+}
+
+if (!defined('MYSQL_CLIENT_INTERACTIVE')) {
+    define('MYSQL_CLIENT_INTERACTIVE', MysqlConstants::CLIENT_INTERACTIVE);
+}
+
+if (!defined('MYSQL_CLIENT_IGNORE_SPACE')) {
+    define('MYSQL_CLIENT_IGNORE_SPACE', MysqlConstants::CLIENT_IGNORE_SPACE);
+}
+
+if (!defined('MYSQL_ASSOC')) {
+    define('MYSQL_ASSOC', MysqlConstants::FETCH_ASSOC);
+}
+
+if (!defined('MYSQL_NUM')) {
+    define('MYSQL_NUM', MysqlConstants::FETCH_NUM);
+}
+
+if (!defined('MYSQL_BOTH')) {
+    define('MYSQL_BOTH', MysqlConstants::FETCH_BOTH);
+}
+
+///////////////////////////////////////
+// Define the global functions       //
+///////////////////////////////////////
+
 if (!function_exists('mysql_affected_rows')) {
     function mysql_affected_rows(Connection $linkIdentifier = null) {
         return Mysql::affectedRows($linkIdentifier);

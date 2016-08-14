@@ -32,4 +32,14 @@ class Mysql
 
         return call_user_func_array([self::$bridge, $method], $args);
     }
+
+    /**
+     * Defines the old global functions and constants.
+     *
+     * @return void
+     */
+    public static function defineGlobals()
+    {
+        require_once __DIR__ . '/globals.php';
+    }
 }
