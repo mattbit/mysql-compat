@@ -35,15 +35,29 @@ require __DIR__ . '/vendor/autoload.php';
 use Mattbit\MysqlCompat\Mysql;
 
 Mysql::connect('host', 'user', 'password');
+Mysql::selectDb('my_db');
 
 $result = Mysql::query('SELECT * FROM my_table');
 
-$rows = Mysql::fetchArray($result);
+$row = Mysql::fetchArray($result);
 ```
 
 Note that the static methods are named in a camel-case like version of the original functions, e.g. `mysql_fetch_array` becomes `Mysql::fetchArray`.
 
-If you want to re-define the global functions without touching existing code, just include the file `functions.php`.
+If you are using PHP7 and want to re-define the old global functions and constants without touching existing code, you can use the `Mysql::defineGlobals` method:
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+Mattbit\MysqlCompat\Mysql::defineGlobals();
+
+mysql_connect('host', 'user', 'password');
+mysql_select_db('my_db');
+
+$result = mysql_query('SELECT * FROM my_table');
+
+$row = mysql_fetch_array($result, MYSQL_BOTH);
+```
 
 
 ## To do
