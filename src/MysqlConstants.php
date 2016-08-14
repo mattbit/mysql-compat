@@ -24,7 +24,7 @@ class MysqlConstants
      */
     const CLIENT_IGNORE_SPACE = 256;
 
-    /*
+    /**
      * MYSQL_ASSOC
      */
     const FETCH_ASSOC = 1;
