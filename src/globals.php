@@ -155,8 +155,20 @@ if (!function_exists('mysql_num_fields')) {
     }
 }
 
+if (!function_exists('mysql_numfields')) {
+    function mysql_numfields(Result $result) {
+        return Mysql::numFields($result);
+    }
+}
+
 if (!function_exists('mysql_num_rows')) {
     function mysql_num_rows(Result $result) {
+        return Mysql::numRows($result);
+    }
+}
+
+if (!function_exists('mysql_numrows')) {
+    function mysql_numrows(Result $result) {
         return Mysql::numRows($result);
     }
 }
