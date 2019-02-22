@@ -105,7 +105,7 @@ $row = mysql_fetch_array($result, MYSQL_BOTH);
 - [X] `mysql_​real_​escape_​string`
 - [ ] `mysql_​result`
 - [ ] `mysql_​select_​db`
-- [ ] `mysql_​set_​charset`
+- [X] `mysql_​set_​charset`
 - [ ] `mysql_​stat`
 - [ ] `mysql_​tablename`
 - [ ] `mysql_​thread_​id`
