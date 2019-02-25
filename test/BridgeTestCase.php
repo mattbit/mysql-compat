@@ -6,6 +6,11 @@ use Mattbit\MysqlCompat\Manager;
 class BridgeTestCase extends FunctionalTestCase
 {
     /**
+     * @var Manager
+     */
+    protected $manager;
+
+    /**
      * @var Bridge
      */
     protected $bridge;
@@ -17,8 +22,8 @@ class BridgeTestCase extends FunctionalTestCase
 
     public function setUp()
     {
-        $manager = new Manager(new \Mattbit\MysqlCompat\ConnectionFactory());
-        $this->bridge = new Bridge($manager);
+        $this->manager = new Manager(new \Mattbit\MysqlCompat\ConnectionFactory());
+        $this->bridge = new Bridge($this->manager);
 
         $this->bridge->connect($this->config['dbhost'], $this->config['dbuser'], $this->config['dbpass']);
         $this->bridge->selectDb($this->config['dbname']);

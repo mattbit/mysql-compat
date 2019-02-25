@@ -11,12 +11,19 @@ class Mysql
     /**
      * The database manager service.
      *
+     * @var Manager
+     */
+    private static $manager;
+
+    /**
+     * The bridge service.
+     *
      * @var Bridge
      */
     private static $bridge;
 
     /**
-     * Forward static calls to the manager singleton.
+     * Forward static calls to the bridge singleton.
      *
      * @param  $method
      * @param  $args
@@ -26,11 +33,25 @@ class Mysql
     public static function __callStatic($method, $args)
     {
         if (self::$bridge === null) {
-            $manager = new Manager(new ConnectionFactory());
+            $manager = self::getManager();
             self::$bridge = new Bridge($manager);
         }
 
         return call_user_func_array([self::$bridge, $method], $args);
+    }
+
+    /**
+     * Get the database manager.
+     *
+     * @return Manager
+     */
+    public static function getManager()
+    {
+        if (self::$manager === null) {
+            self::$manager = new Manager(new ConnectionFactory());
+        }
+
+        return self::$manager;
     }
 
     /**

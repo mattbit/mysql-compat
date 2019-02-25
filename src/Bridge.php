@@ -38,12 +38,4 @@ class Bridge
     {
         $this->manager = $manager;
     }
-
-    /**
-     * Get manager instance
-     */
-    public function getManager()
-    {
-        return $this->manager;
-    }
 }
