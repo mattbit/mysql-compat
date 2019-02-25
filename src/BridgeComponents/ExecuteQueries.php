@@ -84,14 +84,9 @@ trait ExecuteQueries
         // @todo
     }
 
-    public function setCharset($charset, Connection $linkIdentifier = null)
+    public function setCharset()
     {
-        $connection = $this->manager->getOpenConnectionOrFail($linkIdentifier);
-
-        return $connection->parametrizedQuery(
-            'SET NAMES :charset',
-            [':charset' => $charset]
-        );
+        // @todo:
     }
 
     public function listFields()

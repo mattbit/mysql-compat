@@ -59,6 +59,20 @@ $result = mysql_query('SELECT * FROM my_table');
 $row = mysql_fetch_array($result, MYSQL_BOTH);
 ```
 
+If you need to customize connection's DSN (eg.: to specify the charset) you can set it directly fetching the Manager and manually calling its `connect` method:
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+use Mattbit\MysqlCompat\Mysql;
+
+$manager = Mysql::getManager();
+$manager->connect('mysql:dbname=database;host=hostname;charset=customCharset', 'user', 'password');
+
+$result = Mysql::query('SELECT * FROM my_table');
+
+$row = Mysql::fetchArray($result);
+```
 
 ## To do
 
@@ -105,7 +119,7 @@ $row = mysql_fetch_array($result, MYSQL_BOTH);
 - [X] `mysql_​real_​escape_​string`
 - [ ] `mysql_​result`
 - [ ] `mysql_​select_​db`
-- [X] `mysql_​set_​charset`
+- [ ] `mysql_​set_​charset`
 - [ ] `mysql_​stat`
 - [ ] `mysql_​tablename`
 - [ ] `mysql_​thread_​id`
