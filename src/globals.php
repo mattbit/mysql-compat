@@ -196,9 +196,3 @@ if (!function_exists('mysql_select_db')) {
         return Mysql::selectDb($databaseName, $linkIdentifier);
     }
 }
-
-if (!function_exists('mysql_set_charset')) {
-    function mysql_set_charset($charset, Connection $linkIdentifier = null) {
-        return Mysql::setCharset($charset, $linkIdentifier);
-    }
-}
