@@ -84,11 +84,6 @@ trait ExecuteQueries
         // @todo
     }
 
-    public function setCharset()
-    {
-        // @todo:
-    }
-
     public function listFields()
     {
         // @todo
@@ -108,6 +103,4 @@ trait ExecuteQueries
     {
         // @todo
     }
-
-
 }

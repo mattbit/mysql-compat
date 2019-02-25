@@ -59,7 +59,7 @@ $result = mysql_query('SELECT * FROM my_table');
 $row = mysql_fetch_array($result, MYSQL_BOTH);
 ```
 
-If you need to customize connection's DSN (eg.: to specify the charset) you can set it directly fetching the Manager and manually calling its `connect` method:
+If you need more control over the connections, the database manager allows you to access the underlying objects.
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
@@ -67,11 +67,28 @@ require __DIR__ . '/vendor/autoload.php';
 use Mattbit\MysqlCompat\Mysql;
 
 $manager = Mysql::getManager();
+
+// Create a connection by specifying a custom DSN.
+$connection = $manager->connect('mysql:dbname=mydatabase;host=myhost', 'user', 'pass');
+
+// You can access the underlying PDO object
+$pdo = $connection->getPdo();
+
+// The rest of the code will use the last connection registered in the manager
+$res = Mysql::query('SELECT * FROM my_table');
+
+// But you can specify explicitly a connection as well
+$res = Mysql::query('SELECT * FROM my_table', $connection);
+```
+
+This is particularly useful if you need to customize connection's DSN (e.g. to specify the charset):
+
+```php
+$manager = Mysql::getManager();
 $manager->connect('mysql:dbname=database;host=hostname;charset=customCharset', 'user', 'password');
 
-$result = Mysql::query('SELECT * FROM my_table');
-
-$row = Mysql::fetchArray($result);
+// This will automatically use the connection above, with the right charset.
+$res = Mysql::query('SELECT * FROM my_table');
 ```
 
 ## To do
@@ -117,9 +134,9 @@ $row = Mysql::fetchArray($result);
 - [ ] `mysql_​ping`
 - [X] `mysql_​query`
 - [X] `mysql_​real_​escape_​string`
-- [ ] `mysql_​result`
+- [X] `mysql_​result`
 - [ ] `mysql_​select_​db`
-- [ ] `mysql_​set_​charset`
+- [X] ~~`mysql_​set_​charset`~~ (see [issue #7](https://github.com/mattbit/mysql-compat/pull/7#issuecomment-467030421) for information)
 - [ ] `mysql_​stat`
 - [ ] `mysql_​tablename`
 - [ ] `mysql_​thread_​id`
