@@ -5,6 +5,7 @@ namespace Mattbit\MysqlCompat\BridgeComponents;
 use PDO;
 use Mattbit\MysqlCompat\Result;
 use Mattbit\MysqlCompat\MysqlConstants;
+use Mattbit\MysqlCompat\Exception\QueryException;
 use Mattbit\MysqlCompat\Exception\NotSupportedException;
 
 trait FetchResults
@@ -104,9 +105,13 @@ trait FetchResults
     {
         $query = $result->getStatement()->queryString;
 
-        $countResult = $result->getConnection()->query(
-            'SELECT COUNT(*) FROM ('. $query .') AS ' . uniqid('count_')
-        );
+        try {
+            $countResult = $result->getConnection()->query(
+                'SELECT COUNT(*) FROM ('. $query .') AS ' . uniqid('count_')
+            );
+        } catch (QueryException $e) {
+            return false;
+        }
 
         return (int) $countResult->fetch()[0];
     }
