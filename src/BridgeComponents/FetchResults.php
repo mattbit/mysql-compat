@@ -107,7 +107,7 @@ trait FetchResults
 
         try {
             $countResult = $result->getConnection()->query(
-                'SELECT COUNT(*) FROM ('. $query .') AS ' . uniqid('count_')
+                'SELECT COUNT(*) FROM (' . $query . ') AS ' . uniqid('count_')
             );
         } catch (QueryException $e) {
             return false;
